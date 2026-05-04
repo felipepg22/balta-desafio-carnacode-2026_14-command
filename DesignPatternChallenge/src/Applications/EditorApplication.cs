@@ -1,35 +1,25 @@
 using System;
-using DesignPatternChallenge.Editor;
+using DesignPatternChallenge.Editors;
+using DesignPatternChallenge.src.Commands;
+using DesignPatternChallenge.src.Queries;
 
 namespace DesignPatternChallenge.Applications
 {
     public class EditorApplication
     {
-        private TextEditor _editor;
-
-        public EditorApplication()
+        public void TypeText(WriteTextCommand writeTextCommand)
         {
-            _editor = new TextEditor();
+            writeTextCommand.Execute();
         }
 
-        public void TypeText(string text)
+        public void MakeBold(MakeTextBoldCommand makeTextBoldCommand)
         {
-            _editor.InsertText(text);
+            makeTextBoldCommand.Execute();
         }
 
-        public void DeleteCharacters(int count)
+        public void Undo(ICommand command)
         {
-            _editor.DeleteText(count);
-        }
-
-        public void MakeBold(int start, int length)
-        {
-            _editor.SetBold(start, length);
-        }
-
-        public void Undo()
-        {
-            Console.WriteLine("❌ Undo não implementado - não há histórico de operações!");
+            command.Undo();
         }
 
         public void Redo()
@@ -37,11 +27,9 @@ namespace DesignPatternChallenge.Applications
             Console.WriteLine("❌ Redo não implementado!");
         }
 
-        public void ShowContent()
+        public void ShowContent(IQuery query)
         {
-            Console.WriteLine($"\n=== Conteúdo do Editor ===");
-            Console.WriteLine($"'{_editor.GetContent()}'");
-            Console.WriteLine($"Cursor na posição: {_editor.GetCursorPosition()}\n");
+           query.Execute();
         }
     }
 }

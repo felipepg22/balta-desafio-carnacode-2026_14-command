@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DesignPatternChallenge.Editor;
+using DesignPatternChallenge.Editors;
 using DesignPatternChallenge.Models;
 
 namespace DesignPatternChallenge.Applications

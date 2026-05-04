@@ -1,16 +1,15 @@
 using System;
 
-namespace DesignPatternChallenge.Editor
+namespace DesignPatternChallenge.Editors
 {
     public class TextEditor
     {
         private string _content;
-        private string _selectedText;
         private int _cursorPosition;
 
         public TextEditor()
         {
-            _content = "";
+            _content = string.Empty;
             _cursorPosition = 0;
         }
 
@@ -32,6 +31,8 @@ namespace DesignPatternChallenge.Editor
                 Console.WriteLine($"[Editor] Conteúdo atual: '{_content}'");
             }
         }
+
+        
 
         public void SetBold(int start, int length)
         {
