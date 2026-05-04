@@ -1,7 +1,7 @@
 using System;
 using DesignPatternChallenge.Editors;
 
-namespace DesignPatternChallenge.src.Queries;
+namespace DesignPatternChallenge.Queries;
 
 public class GetTextContentQuery : IQuery
 {

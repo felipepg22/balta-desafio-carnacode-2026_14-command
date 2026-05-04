@@ -1,7 +1,7 @@
 using System;
 using DesignPatternChallenge.Editors;
 
-namespace DesignPatternChallenge.src.Commands;
+namespace DesignPatternChallenge.Commands;
 
 public class MakeTextBoldCommand : ICommand
 {
@@ -24,5 +24,10 @@ public class MakeTextBoldCommand : ICommand
     public void Undo()
     {
         _textEditor.RemoveBold(_start, _end);
+    }
+
+    public void Redo()
+    {
+        _textEditor.SetBold(_start, _end);
     }
 }

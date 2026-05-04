@@ -1,35 +1,60 @@
 using System;
+using DesignPatternChallenge.Commands;
 using DesignPatternChallenge.Editors;
-using DesignPatternChallenge.src.Commands;
-using DesignPatternChallenge.src.Queries;
+using DesignPatternChallenge.Queries;
 
 namespace DesignPatternChallenge.Applications
 {
     public class EditorApplication
     {
-        public void TypeText(WriteTextCommand writeTextCommand)
+        private readonly TextEditor _editor;
+        private readonly CommandInvoker _invoker;
+
+        public EditorApplication()
         {
-            writeTextCommand.Execute();
+            _editor = new TextEditor();
+            _invoker = new CommandInvoker();
         }
 
-        public void MakeBold(MakeTextBoldCommand makeTextBoldCommand)
+        public void TypeText(string text)
         {
-            makeTextBoldCommand.Execute();
+            var command = new WriteTextCommand(_editor, text);
+            _invoker.ExecuteCommand(command);
         }
 
-        public void Undo(ICommand command)
+        public void DeleteCharacters(int count)
         {
-            command.Undo();
+            var command = new DeleteTextCommand(_editor, count);
+            _invoker.ExecuteCommand(command);
+        }
+
+        public void MakeBold(int start, int length)
+        {
+            var command = new MakeTextBoldCommand(_editor, start, length);
+            _invoker.ExecuteCommand(command);
+        }
+
+        public void Undo()
+        {
+            if (_invoker.CanUndo)
+            {
+                _invoker.Undo();
+            }
         }
 
         public void Redo()
         {
-            Console.WriteLine("❌ Redo não implementado!");
+            if (_invoker.CanRedo)
+            {
+                _invoker.Redo();
+            }
         }
 
-        public void ShowContent(IQuery query)
+        public void ShowContent()
         {
-           query.Execute();
+            Console.WriteLine($"\n=== Conteúdo do Editor ===");
+            Console.WriteLine($"'{_editor.GetContent()}'");
+            Console.WriteLine($"Cursor na posição: {_editor.GetCursorPosition()}\n");
         }
     }
 }

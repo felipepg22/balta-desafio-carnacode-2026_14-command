@@ -1,6 +1,6 @@
 using System;
 
-namespace DesignPatternChallenge.src.Queries;
+namespace DesignPatternChallenge.Queries;
 
 public interface IQuery
 {

@@ -1,53 +1,62 @@
 using System;
-using System.Collections.Generic;
+using DesignPatternChallenge.Commands;
 using DesignPatternChallenge.Editors;
-using DesignPatternChallenge.Models;
 
 namespace DesignPatternChallenge.Applications
 {
     public class EditorWithOperationLog
     {
-        private TextEditor _editor;
-        private Stack<Operation> _operations;
+        private readonly TextEditor _editor;
+        private readonly CommandInvoker _invoker;
 
         public EditorWithOperationLog()
         {
             _editor = new TextEditor();
-            _operations = new Stack<Operation>();
+            _invoker = new CommandInvoker();
         }
 
         public void TypeText(string text)
         {
-            _operations.Push(new Operation 
-            { 
-                Type = "Insert", 
-                Text = text,
-                Position = _editor.GetCursorPosition()
-            });
-            _editor.InsertText(text);
+            var command = new WriteTextCommand(_editor, text);
+            _invoker.ExecuteCommand(command);
+        }
+
+        public void DeleteCharacters(int count)
+        {
+            var command = new DeleteTextCommand(_editor, count);
+            _invoker.ExecuteCommand(command);
+        }
+
+        public void MakeBold(int start, int length)
+        {
+            var command = new MakeTextBoldCommand(_editor, start, length);
+            _invoker.ExecuteCommand(command);
         }
 
         public void Undo()
         {
-            if (_operations.Count > 0)
+            if (_invoker.CanUndo)
             {
-                var op = _operations.Pop();
-                
-                switch (op.Type)
-                {
-                    case "Insert":
-                        _editor.SetCursorPosition(op.Position + op.Text.Length);
-                        _editor.DeleteText(op.Text.Length);
-                        break;
-                    case "Delete":
-                        _editor.SetCursorPosition(op.Position);
-                        _editor.InsertText(op.Text);
-                        break;
-                    case "Bold":
-                        _editor.RemoveBold(op.Position, op.Length);
-                        break;
-                }
+                _invoker.Undo();
             }
+        }
+
+        public void Redo()
+        {
+            if (_invoker.CanRedo)
+            {
+                _invoker.Redo();
+            }
+        }
+
+        public string GetContent() => _editor.GetContent();
+        public int GetCursorPosition() => _editor.GetCursorPosition();
+
+        public void ShowContent()
+        {
+            Console.WriteLine($"\n=== Conteúdo do Editor ===");
+            Console.WriteLine($"'{_editor.GetContent()}'");
+            Console.WriteLine($"Cursor na posição: {_editor.GetCursorPosition()}\n");
         }
     }
 }
